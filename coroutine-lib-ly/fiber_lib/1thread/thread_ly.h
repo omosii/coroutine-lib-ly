@@ -12,6 +12,7 @@ namespace sylar
     class Semaphore
     {
     private:
+        std::mutex mtx;
     };
 }
 
