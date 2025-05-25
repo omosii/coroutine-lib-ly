@@ -8,7 +8,7 @@
 namespace sylar
 {
 
-    // 用于线程方法间的同步
+    // 鐢ㄤ簬绾跨▼鏂规硶闂寸殑鍚屾
     class Semaphore
     {
     private:
