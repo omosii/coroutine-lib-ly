@@ -24,7 +24,7 @@ public:
 
 protected:
     // 设置正在运行的调度器
-    void Setthis();
+    void SetThis();
 
 public:
     // 添加任务到任务队列 FiberOrCb是调度任务类型，可以是协程或者函数
@@ -79,35 +79,75 @@ private:
         std::shared_ptr<Fiber> fiber;
         std::function<void()> cb;
         int thread; // 指定任务需要运行的线程id
+
+        ScheduleTask()
+        {
+            fiber = nullptr;
+            cb = nullptr;
+            thread = -1;
+        }
+
+        ScheduleTask(std::shared_ptr<Fiber> f, int thr)
+        {
+            fiber = f;
+            thread = thr;
+        }
+
+        ScheduleTask(std::shared_ptr<Fiber>* f, int thr)
+        {
+            // f 是一个指向 std::shared_ptr<Fiber> 的指针，即 shared_ptr 的指针。
+            fiber.swap(*f); // 通过 swap 转移所有权
+            thread = thr;
+        }
+
+        ScheduleTask(std::function<void()> f, int thr)
+        {
+            cb = f;
+            thread = thr;
+        }
+
+        ScheduleTask(std::function<void()> *f, int thr)
+        {
+            cb.swap(*f);
+            thread = thr;
+        }
+
+        void reset()
+        {
+            fiber = nullptr;
+            cb = nullptr;
+            thread = -1;
+        }
     };
 private:
     std::string m_name;
     // 互斥锁 -> 保护任务队列
 	std::mutex m_mutex;
-
+    // 线程池
+    std::vector<std::shared_ptr<Thread>> m_threads;
+    // 任务队列
+    std::vector<ScheduleTask> m_tasks;
+    // 存储工作线程的线程id
+    std::vector<int> m_threadIds;
+    // 需要额外创建的线程数
+    size_t m_threadCount = 0;
+    // 活跃线程数
+    std::atomic<size_t> m_activeThreadCount = {0}; // 赋值号= 可省略
     // 空闲线程数
     std::atomic<size_t> m_idleThreadCount = {0};
+
+    // 主线程是否用作工作线程
+    bool m_useCaller;
+    // 如果是 -> 需要额外创建调度协程
+    std::shared_ptr<Fiber> m_schedulerFiber;
+    // 如果是 -> 记录主线程的线程id
+    int m_rootThread = -1;
+    // 是否正在关闭
+    bool m_stopping = false;
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
 
 
 #endif
