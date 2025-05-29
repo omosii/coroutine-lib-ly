@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.java": "java",
         "memory": "cpp",
         "atomic": "cpp",
         "array": "cpp",
@@ -54,7 +55,10 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "optional": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true
 }
