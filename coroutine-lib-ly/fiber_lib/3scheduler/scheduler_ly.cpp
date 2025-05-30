@@ -1,5 +1,7 @@
 #include "scheduler_ly.h"
 
+#include <unistd.h>
+
 static bool debug = false;
 
 namespace sylar{
@@ -171,7 +173,76 @@ void Scheduler::run()
     }
 }
 
+void Scheduler::stop()
+{
+    if(debug) std::cout << "Schedule::stop() starts in thread: " << Thread::GetThreadId() << std::endl;
 
+    if(stopping())
+    {
+        return;
+    }
+
+    m_stopping = true;
+
+    if(m_useCaller)
+    {
+        assert(GetThis() == this);
+    }
+    else
+    {
+        assert(GetThis() != this);
+    }
+
+    for(size_t i = 0; i < m_threadCount; i++)
+    {
+        tickle();
+    }
+
+    if(m_schedulerFiber)
+    {
+        tickle();
+    }
+
+    if(m_schedulerFiber)
+    {
+        m_schedulerFiber->resume();
+		if(debug) std::cout << "m_schedulerFiber ends in thread:" << Thread::GetThreadId() << std::endl;
+    }
+
+    std::vector<std::shared_ptr<Thread>> thrs;
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        thrs.swap(m_threads);
+    }
+
+    for(auto i : thrs)
+    {
+        i->join();
+    }
+    if(debug) std::cout << "Schedule::stop() ends in thread:" << Thread::GetThreadId() << std::endl;
+}
+
+void Scheduler::tickle()
+{
+}
+
+// 空闲协程
+void Scheduler::idle()
+{
+    while(!stopping())
+    {
+        if(debug) std::cout << "Scheduler::idle(), sleeping in thread: " << Thread::GetThreadId() << std::endl;	
+        sleep(1); // 挂起协程
+        Fiber::GetThis()->yield();
+    }
+}
+
+// 判断调度器是否退出
+bool Scheduler::stopping()
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_stopping && m_tasks.empty() && m_activeThreadCount == 0;
+}
 
 
 
