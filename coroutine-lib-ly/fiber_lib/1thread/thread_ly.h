@@ -78,20 +78,6 @@ private:
     Semaphore m_semaphore;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 #endif
