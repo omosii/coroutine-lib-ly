@@ -123,11 +123,68 @@ std::shared_ptr<Timer> TimerManager::addConditionTimer(uint64_t ms, std::functio
     return addTimer(ms, std::bind(&OnTimer, weak_cond, cb), recurring);
 }
 
+uint64_t TimerManager::getNextTimer()
+{
+    std::shared_lock<std::shared_mutex> read_lock(m_mutex);
 
+    // reset m_tickled
+    m_tickled = false;
 
+    if(m_timers.empty())
+    {
+        // 返回最大值
+        return ~0ull;
+    }
 
+    auto it = m_timers.begin();
+    auto now = std::chrono::system_clock::now();
+    auto time = (*it)->m_next;
 
+    if(now >= time)
+    {
+        // 已经有timer超时
+        return 0;
+    }
+    else
+    {
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(time - now);
+        return static_cast<uint64_t>(duration.count());
+    }
 
+}
+
+void TimerManager::listExpiredCb(std::vector<std::function<void()>>& cbs)
+{
+    auto now = std::chrono::system_clock::now();
+
+    std::unique_lock<std::shared_mutex> write_lock(m_mutex);
+
+    bool rollover = detectClockRollover();
+    // 回退 -> 清理所有timer || 超时 -> 清理超时timer
+    while(!m_timers.empty() && rollover || !m_timers.empty() && (*m_timers.begin())->m_next < now)
+    {
+        std::shared_ptr<Timer> temp = *m_timers.begin();
+        m_timers.erase(m_timers.begin());
+
+        cbs.push_back(temp->m_cb);
+
+        if(temp->m_recurring)
+        {
+            temp->m_next = now + std::chrono::milliseconds(temp->m_ms);
+            m_timers.insert(temp);
+        }
+        else{
+            // 清理cb 
+            temp->m_cb = nullptr;
+        }
+    }
+}
+
+bool TimerManager::hasTimer()
+{
+    std::shared_lock<std::shared_mutex> read_lock(m_mutex);
+    return !m_timers.empty();
+}
 
 
 
@@ -158,9 +215,18 @@ void TimerManager::addTimer(std::shared_ptr<Timer> timer)
 }
 
 
-
-
-
+bool TimerManager::detectClockRollover() 
+{
+    bool rollover = false;
+    auto now = std::chrono::system_clock::now();
+    // 判断当前时间是否比（上一次时间 - 1小时）更早
+    if(now < (m_previouseTime - std::chrono::milliseconds(60 * 60 * 1000))) 
+    {
+        rollover = true;
+    }
+    m_previouseTime = now;
+    return rollover;
+}
 
 
 }
