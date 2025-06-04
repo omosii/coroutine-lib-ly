@@ -1,6 +1,7 @@
-#include "timer.h"
+#include "timer_ly.h"
 #include <unistd.h>
 #include <iostream>
+
 using namespace sylar;
 
 void func(int i)
