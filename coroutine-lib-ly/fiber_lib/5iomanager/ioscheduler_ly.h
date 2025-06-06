@@ -78,7 +78,7 @@ protected:
 
 private:
     int m_epfd = 0;
-    // fd[0] read£¬fd[1] write
+    // fd[0] readï¼Œfd[1] write
     int m_tickleFds[2];
 
     std::atomic<size_t> m_pendingEventCount = {0};
