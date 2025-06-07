@@ -70,7 +70,7 @@ protected:
 
     // 返回是否有空闲线程
     // 具体来说，当调度协程进入idle时，空闲线程数+1；从idle协程返回时，空闲线程数-1
-    bool hasIdleThread() {return m_idleThreadCount > 0;}
+    bool hasIdleThreads() {return m_idleThreadCount > 0;}
 
 private:
     // 任务
