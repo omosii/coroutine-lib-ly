@@ -364,7 +364,7 @@ void IOManager::idle()
 
     while (true) 
     {
-        if(debug) std::cout << "IOManager::idle(),run in thread: " << Thread::GetThreadId() << std::endl; 
+        if(debug) std::cout << "IOManager::idle(), run in thread: " << Thread::GetThreadId() << std::endl; 
 
         if(stopping()) 
         {
