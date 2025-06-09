@@ -15,6 +15,7 @@ public:
     {
         NONE = 0x0,
         // READ == EPOLLIN
+        // 当服务器监听的文件描述符（如 socket）的​​接收缓冲区中有新数据到达​​时，内核会触发 EPOLLIN 事件。
         READ = 0x1,
         // WRITE == EPOLLOUT
         WRITE = 0x4
@@ -40,7 +41,7 @@ private:
 
         int fd = 0;
         // events registered
-        Event events = NOME;
+        Event events = NONE;
         std::mutex mutex;
 
         EventContext& getEventContext(Event event);
