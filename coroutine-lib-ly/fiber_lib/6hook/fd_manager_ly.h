@@ -12,73 +12,73 @@ namespace sylar {
 class FdCtx : public std::enable_shared_from_this<FdCtx>
 {
 private:
-    bool m_isInit = false; //±ê¼ÇÎÄ¼şÃèÊö·ûÊÇ·ñÒÑ³õÊ¼»¯¡£
-    bool m_isSocket = false;//±ê¼ÇÎÄ¼şÃèÊö·ûÊÇ·ñÊÇÒ»¸öÌ×½Ó×Ö¡£
-    bool m_sysNonblock = false;//±ê¼ÇÎÄ¼şÃèÊö·ûÊÇ·ñÉèÖÃÎªÏµÍ³·Ç×èÈûÄ£Ê½¡£
-    bool m_userNonblock = false;//±ê¼ÇÎÄ¼şÃèÊö·ûÊÇ·ñÉèî½ÎªÓÃ»§·ÇÑôÈûÄ£Ê½
-    bool m_isClosed = false;//±ê¼ÇÎÄ¼şÃèÊö·ûÊÇ·ñÒÑ¹Ø±Õ¡£
-    int m_fd;//ÎÄ¼şÃèÊö·ûµÄÕûÊıÖµ
+    bool m_isInit = false; //æ ‡è®°æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦å·²åˆå§‹åŒ–ã€‚
+    bool m_isSocket = false;//æ ‡è®°æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦æ˜¯ä¸€ä¸ªå¥—æ¥å­—ã€‚
+    bool m_sysNonblock = false;//æ ‡è®°æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦è®¾ç½®ä¸ºç³»ç»Ÿéé˜»å¡æ¨¡å¼ã€‚
+    bool m_userNonblock = false;//æ ‡è®°æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦è®¾ç½±ä¸ºç”¨æˆ·éé˜³å¡æ¨¡å¼
+    bool m_isClosed = false;//æ ‡è®°æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦å·²å…³é—­ã€‚
+    int m_fd;//æ–‡ä»¶æè¿°ç¬¦çš„æ•´æ•°å€¼
 
     // read event timeout
-    uint64_t m_recvTimeout = (uint64_t)-1;//¶ÁÊÂ¼şµÄ³¬Ê±Ê±¼ä£¬Ä¬ÈÏÎª -1 ±íÊ¾Ã»ÓĞ³¬Ê±ÏŞÖÆ
+    uint64_t m_recvTimeout = (uint64_t)-1;//è¯»äº‹ä»¶çš„è¶…æ—¶æ—¶é—´ï¼Œé»˜è®¤ä¸º -1 è¡¨ç¤ºæ²¡æœ‰è¶…æ—¶é™åˆ¶
     // write event timeout
-    uint64_t m_sendTimeout = (uint64_t)-1;//Ğ´ÊÂ¼şµÄ³¬Ê±Ê±¼ä£¬Ä¬ÈÏÎª -1 ±íÊ¾Ã»ÓĞ³¬Ê±ÏŞÖÆ
+    uint64_t m_sendTimeout = (uint64_t)-1;//å†™äº‹ä»¶çš„è¶…æ—¶æ—¶é—´ï¼Œé»˜è®¤ä¸º -1 è¡¨ç¤ºæ²¡æœ‰è¶…æ—¶é™åˆ¶
 
 public:
     FdCtx(int fd);
     ~FdCtx();
 
-    bool init(); // ³õÊ¼»¯ Fdctx ¶ÔÏó¡£³õÊ¼»¯ÎÄ¼şÃèÊö·ûÉÏÏÂÎÄ
-    bool isInit() const { return m_isInit; } //¼ì²éÎÄ¼şÃèÊö·ûÊÇ·ñÒÑ³õÊ¼»¯
-    bool isSocket() const { return m_isSocket; } //¼ì²éÎÄ¼şÃèÊö·ûÊÇ·ñÊÇÌ×½Ó×Ö
-    bool isClosed() const { return m_isClosed; } //¼ì²éÎÄ¼şÃèÊö·ûÊÇ·ñÒÑ¹Ø±Õ
+    bool init(); // åˆå§‹åŒ– Fdctx å¯¹è±¡ã€‚åˆå§‹åŒ–æ–‡ä»¶æè¿°ç¬¦ä¸Šä¸‹æ–‡
+    bool isInit() const { return m_isInit; } //æ£€æŸ¥æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦å·²åˆå§‹åŒ–
+    bool isSocket() const { return m_isSocket; } //æ£€æŸ¥æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦æ˜¯å¥—æ¥å­—
+    bool isClosed() const { return m_isClosed; } //æ£€æŸ¥æ–‡ä»¶æè¿°ç¬¦æ˜¯å¦å·²å…³é—­
 
-    //ÉèÖÃºÍ»ñÈ¡ÓÃ»§²ãÃæµÄ·Ç×èÈû×´Ì¬¡£
-    void setUserNonblock(bool v) { m_userNonblock = v; } //ÉèÖÃÓÃ»§·Ç×èÈûÄ£Ê½
-    bool getUserNonblock() const { return m_userNonblock; } //»ñÈ¡ÓÃ»§·Ç×èÈûÄ£Ê½×´Ì¬
+    //è®¾ç½®å’Œè·å–ç”¨æˆ·å±‚é¢çš„éé˜»å¡çŠ¶æ€ã€‚
+    void setUserNonblock(bool v) { m_userNonblock = v; } //è®¾ç½®ç”¨æˆ·éé˜»å¡æ¨¡å¼
+    bool getUserNonblock() const { return m_userNonblock; } //è·å–ç”¨æˆ·éé˜»å¡æ¨¡å¼çŠ¶æ€
 
-    //ÉèÖÃºÍ»ñÈ¡ÏµÍ³²ãÃæµÄ·Ç×èÈû×´Ì¬¡£
-    void setSysNonblock(bool v) { m_sysNonblock = v; } //ÉèÖÃÏµÍ³·Ç×èÈûÄ£Ê½
-    bool getSysNonblock() const { return m_sysNonblock; } //»ñÈ¡ÏµÍ³·Ç×èÈûÄ£Ê½×´Ì¬
+    //è®¾ç½®å’Œè·å–ç³»ç»Ÿå±‚é¢çš„éé˜»å¡çŠ¶æ€ã€‚
+    void setSysNonblock(bool v) { m_sysNonblock = v; } //è®¾ç½®ç³»ç»Ÿéé˜»å¡æ¨¡å¼
+    bool getSysNonblock() const { return m_sysNonblock; } //è·å–ç³»ç»Ÿéé˜»å¡æ¨¡å¼çŠ¶æ€
 
-    //ÉèÖÃºÍ»ñÈ¡³¬Ê±Ê±¼ä£¬type ÓÃÓÚÇø·Ö¶ÁÊÂ¼şºÍĞ´ÊÂ¼şµÄ³¬Ê±ÉèÖÃ£¬v±íÊ¾Ê±¼äºÁÃë¡£
-    void setTimeout(int type, uint64_t v); //ÉèÖÃ³¬Ê±Ê±¼ä
-    uint64_t getTimeout(int type); //»ñÈ¡³¬Ê±Ê±¼ä
+    //è®¾ç½®å’Œè·å–è¶…æ—¶æ—¶é—´ï¼Œtype ç”¨äºåŒºåˆ†è¯»äº‹ä»¶å’Œå†™äº‹ä»¶çš„è¶…æ—¶è®¾ç½®ï¼Œvè¡¨ç¤ºæ—¶é—´æ¯«ç§’ã€‚
+    void setTimeout(int type, uint64_t v); //è®¾ç½®è¶…æ—¶æ—¶é—´
+    uint64_t getTimeout(int type); //è·å–è¶…æ—¶æ—¶é—´
 };
 
 class FdManager
 {
 public:
-    FdManager(); //¹¹Ôìº¯Êı
+    FdManager(); //æ„é€ å‡½æ•°
 
-    // »ñÈ¡ÎÄ¼şÃèÊö·ûÉÏÏÂÎÄ¡£
-    // Èç¹û auto create Îª true£¬ÔÚ²»´æÔÚÊ±×Ô¶¯´´½¨ĞÂµÄ Fdctx ¶ÔÏó¡£
-    // Èç¹û²»´æÔÚÔò¸ù¾İ auto_create ²ÎÊı¾ö¶¨ÊÇ·ñ´´½¨ĞÂµÄÉÏÏÂÎÄ¡£
+    // è·å–æ–‡ä»¶æè¿°ç¬¦ä¸Šä¸‹æ–‡ã€‚
+    // å¦‚æœ auto create ä¸º trueï¼Œåœ¨ä¸å­˜åœ¨æ—¶è‡ªåŠ¨åˆ›å»ºæ–°çš„ Fdctx å¯¹è±¡ã€‚
+    // å¦‚æœä¸å­˜åœ¨åˆ™æ ¹æ® auto_create å‚æ•°å†³å®šæ˜¯å¦åˆ›å»ºæ–°çš„ä¸Šä¸‹æ–‡ã€‚
     std::shared_ptr<FdCtx> get(int fd, bool auto_create = false);
-    void del(int fd); //É¾³ıÖ¸¶¨ÎÄ¼şÃèÊö·ûµÄ Fdctx ¶ÔÏó, É¾³ıÖ¸¶¨µÄÎÄ¼şÃèÊö·ûÉÏÏÂÎÄ
+    void del(int fd); //åˆ é™¤æŒ‡å®šæ–‡ä»¶æè¿°ç¬¦çš„ Fdctx å¯¹è±¡, åˆ é™¤æŒ‡å®šçš„æ–‡ä»¶æè¿°ç¬¦ä¸Šä¸‹æ–‡
 
 private:
     std::shared_mutex m_mutex;
     std::vector<std::shared_ptr<FdCtx>> m_datas;
 };
 
-// µ¥ÀıÄ£Ê½
+// å•ä¾‹æ¨¡å¼
 template<typename T>
 class Singleton
 {
 private:
-    static T* instance; // ¾²Ì¬ÊµÀıÖ¸Õë
-    static std::mutex mutex; // »¥³âËø
+    static T* instance; // é™æ€å®ä¾‹æŒ‡é’ˆ
+    static std::mutex mutex; // äº’æ–¥é”
 
 protected:
     Singleton() {}
 
 public:
     // Delete copy constructor and assignment operation
-    Singleton(const Singleton&) = delete; // ½ûÖ¹¿½±´¹¹Ôì)
-    Singleton& operator=(const Singleton&) = deletel; // ½ûÖ¹¸³Öµ²Ù×÷
+    Singleton(const Singleton&) = delete; // ç¦æ­¢æ‹·è´æ„é€ )
+    Singleton& operator=(const Singleton&) = deletel; // ç¦æ­¢èµ‹å€¼æ“ä½œ
 
-    // »ñÈ¡µ¥ÀıÊµÀı
+    // è·å–å•ä¾‹å®ä¾‹
     static T* GetInstance()
     {
         std::lock_guard<std::mutex> lock(mutex);
@@ -89,17 +89,17 @@ public:
         return instance;
     }
 
-    // Ïú»Ùµ¥ÀıÊµÀı
+    // é”€æ¯å•ä¾‹å®ä¾‹
     static void DestroyInstance()
     {
         std::lock_guard<std::mutex> lock(mutex);
-        // deleteÒ»¸önullptrÊÇÍêÈ«°²È«µÄ²Ù×÷£¬²»»áÒı·¢ÈÎºÎ´íÎó»òÒì³£¡£ÕâÊÇÓÉC++±ê×¼Ã÷È·¹æ¶¨µÄĞĞÎª
+        // deleteä¸€ä¸ªnullptræ˜¯å®Œå…¨å®‰å…¨çš„æ“ä½œï¼Œä¸ä¼šå¼•å‘ä»»ä½•é”™è¯¯æˆ–å¼‚å¸¸ã€‚è¿™æ˜¯ç”±C++æ ‡å‡†æ˜ç¡®è§„å®šçš„è¡Œä¸º
         delete instance;
         instance = nullptr;
     }
 };
 
-// ¶¨Òå FdManager µÄµ¥Àı
+// å®šä¹‰ FdManager çš„å•ä¾‹
 typedef Singleton<FdManager> FdMgr; 
 
 }
