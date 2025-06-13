@@ -59,6 +59,7 @@ public:
 
 private:
     std::shared_mutex m_mutex;
+    // 若通过构造函数指定初始大小（如 vector<n>）：​​std::shared_ptr 元素​​：每个元素会被值初始化，即 nullptr。
     std::vector<std::shared_ptr<FdCtx>> m_datas;
 };
 
