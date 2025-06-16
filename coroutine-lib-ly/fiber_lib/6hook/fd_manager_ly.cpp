@@ -117,7 +117,7 @@ std::shared_ptr<FdCtx> FdManager::get(int fd, bool auto_create)
     {
         if(m_datas[fd] || !auto_create) // 如果文件描述符上下文已存在或不允许自动创建
         {
-            return m_datas[fd]; // 返回已存在的文件描述符上下文
+            return m_datas[fd]; // 返回已存在的文件描述符上下文，初始化为nullptr
         }
     }
 
@@ -133,14 +133,15 @@ std::shared_ptr<FdCtx> FdManager::get(int fd, bool auto_create)
 
 }
 
-
-
-
-
-
-
-
-
+void FdManager::del(int fd)
+{
+	std::unique_lock<std::shared_mutex> write_lock(m_mutex);
+	if(m_datas.size() <= fd)
+	{
+		return;
+	}
+	m_datas[fd].reset();
+}
 
 
 }
