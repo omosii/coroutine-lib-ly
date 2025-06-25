@@ -77,7 +77,7 @@ protected:
 public:
     // Delete copy constructor and assignment operation
     Singleton(const Singleton&) = delete; // 禁止拷贝构造)
-    Singleton& operator=(const Singleton&) = deletel; // 禁止赋值操作
+    Singleton& operator=(const Singleton&) = delete; // 禁止赋值操作
 
     // 获取单例实例
     static T* GetInstance()
