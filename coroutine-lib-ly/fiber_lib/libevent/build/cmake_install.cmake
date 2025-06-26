@@ -1,4 +1,4 @@
-# Install script for directory: /home/lhs/apache_corlib/libevent
+# Install script for directory: /home/lyz/workpspace/coroutine_kama/coroutine-lib-ly/fiber_lib/libevent
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/lhs/apache_corlib/libevent/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/lyz/workpspace/coroutine_kama/coroutine-lib-ly/fiber_lib/libevent/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
