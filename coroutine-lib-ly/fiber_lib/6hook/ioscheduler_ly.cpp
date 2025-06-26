@@ -5,7 +5,7 @@
 
 #include "ioscheduler_ly.h"
 
-static bool debug = true;
+static bool debug = false;
 
 namespace sylar {
 
