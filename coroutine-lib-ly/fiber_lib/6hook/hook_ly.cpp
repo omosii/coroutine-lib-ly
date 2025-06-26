@@ -35,7 +35,7 @@ namespace sylar{
 // if this thread is using hooked function 
 // 不启用钩子函数时，sleep为原始系统调用，启用后为自定义调用
 // 此时sleep_f为原始系统调用
-static thread_local bool t_hook_enable = false;
+static thread_local bool t_hook_enable = true;
 
 bool is_hook_enable()
 {
